@@ -12,7 +12,7 @@ const EntryResults = z.array(EntryResult);
 
 export type EntriesType = z.infer<typeof EntryResults>;
 
-export function process(filePath: string) {
+export function processSingleFile(filePath: string) {
   fs.readFile(filePath, 'utf8', (error, jsonString) => {
     if (error) {
       console.log('File read failed:', error);

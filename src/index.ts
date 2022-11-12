@@ -1,6 +1,15 @@
-import { processCommand } from './commands/process';
-import { program } from 'commander';
+#! /usr/bin/env node
 
-program.addCommand(processCommand);
+import { processCommand } from './commands/process';
+import { Command } from 'commander';
+
+const program = new Command();
+
+program
+  .name('tscli')
+  .description('A CLI for the CSS Coding Challenge')
+  .version('0.0.1');
+
+program.addCommand(processCommand, { isDefault: true });
 
 program.parse(process.argv);
