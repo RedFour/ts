@@ -1,4 +1,6 @@
-export class Entry {
+import { Stringable } from '../interfaces/stringable';
+
+export class Entry implements Stringable {
   id: string;
   name: string;
   quantity: number;

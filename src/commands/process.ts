@@ -1,8 +1,8 @@
 import { Command } from 'commander';
-import { processSingleFile } from '../services/processService';
+import { processFile } from '../services/processService';
 export const processCommand = new Command()
   .command('process [filePath]')
   .description('Process a file')
-  .action((filePath = 'css_example.json') => {
-    processSingleFile(filePath);
+  .action(async (filePath = 'css_example.json') => {
+    await processFile(filePath);
   });

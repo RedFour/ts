@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { readFile } from 'fs/promises';
 import { z } from 'zod';
 import { Entry } from '../models/entry';
 
@@ -12,22 +12,21 @@ const EntryResults = z.array(EntryResult);
 
 export type EntriesType = z.infer<typeof EntryResults>;
 
-export function processSingleFile(filePath: string) {
-  fs.readFile(filePath, 'utf8', (error, jsonString) => {
-    if (error) {
-      console.log('File read failed:', error);
-      return;
-    }
-    try {
-      const raw = JSON.parse(jsonString);
-      const parsed = EntryResults.parse(raw);
+export async function processFile(filePath: string) {
+  try {
+    const data = await readFile(filePath, { encoding: 'utf8' });
+    const raw = JSON.parse(data);
+    const parsed = EntryResults.parse(raw);
 
-      parsed.forEach((element) => {
-        const entry = new Entry(element.id, element.name, element.quantity);
-        console.log(entry.toString());
-      });
-    } catch (error) {
-      console.log('Error parsing JSON string: ', error);
+    parsed.forEach((element) => {
+      const entry = new Entry(element.id, element.name, element.quantity);
+      console.log(entry.toString());
+    });
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      console.error('File read failed: ' + error.message);
+    } else {
+      console.error('Unexpected failure: ' + error.message);
     }
-  });
+  }
 }
